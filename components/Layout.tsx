@@ -18,7 +18,7 @@ const Layout: FC<Props> = ({pageDescription, title, children}) => {
 
     <Header />
 
-    <main>
+    <main className='mt-20'>
         {children}
     </main>
     </>
