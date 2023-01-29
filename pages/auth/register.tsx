@@ -18,8 +18,11 @@ const labelStyle = "text-lg mt-4 mb-2 text-green-500"
 const errorStyle = "mt-2 text-red-500"
 
 const RegisterPage = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    console.log(data)
+    reset() 
+  };
 
 
   return (
