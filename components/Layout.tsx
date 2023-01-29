@@ -18,7 +18,7 @@ const Layout: FC<Props> = ({pageDescription, title, children}) => {
 
     <Header />
 
-    <main className='mt-20'>
+    <main className='mt-40 flex justify-center'>
         {children}
     </main>
     </>
