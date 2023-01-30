@@ -1,25 +1,29 @@
 import Layout from "@/components/Layout";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from '@hookform/resolvers/yup';
 
-enum GenderEnum {
-  frontend = "frontend",
-  backend = "backend",
-  fullstack = "fullstack",
-}
-
-interface IFormInput {
-  firstName: String;
-  lastName: String;
-  area: GenderEnum;
-}
+const schema = yup.object({
+  email: yup.string().required("This field must be filled!").email("Email format is invalid"),
+  firstName: yup.string().required("This field must be filled!").min(3, "Min 3 characters!"),
+  lastName: yup.string().required("This field must be filled!").min(3, "Min 3 characters!"),
+  password: yup.string().required("This field must be filled!").min(6, "Min 6 characters!"),
+  repeatPassword: yup.string()
+  .oneOf([yup.ref('password'), null], 'Passwords must match!'),
+  area: yup.string().required(),
+}).required();
+type FormData = yup.InferType<typeof schema>;
 
 const inputStyle = "border border-gray-500 px-1 rounded outline-none bg-gray-200"
-const labelStyle = "text-lg mt-4 mb-2 text-green-500"
+const labelStyle = "text-lg mt-1 mb-2 text-green-500"
 const errorStyle = "mt-2 text-red-500"
 
 const RegisterPage = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
+    mode: "all",
+    resolver: yupResolver(schema)
+  });
+  const onSubmit = (data: FormData) => {
     console.log(data)
     reset() 
   };
@@ -32,22 +36,49 @@ const RegisterPage = () => {
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex align-center flex-col w-[600px] p-8 pb-8 rounded bg-gray-900 relative"
+        className="flex align-center flex-col w-[800px] p-8 pb-8 rounded bg-gray-900 relative"
       >
-        <h1 className="text-2xl text-green-500">Register Form</h1>
+        <h1 className="text-2xl text-green-500 mb-4">Register Form</h1>
+        <label className={labelStyle}>Email</label>
+        <input
+          {...register("email", {})}
+          className={inputStyle}
+        />
+        {!errors.email && <p className="h-6"></p>}
+        <p className={errorStyle} >{errors.email?.message}</p>
         <label className={labelStyle}>First Name</label>
         <input
-          {...register("firstName", {required: true, minLength: 3})}
+          {...register("firstName", {})}
           className={inputStyle}
         />
-        {!errors.firstName && <p className="h-8"></p>}
-        {errors.firstName?.type === 'required' && <p className={errorStyle}>First name required!</p>}
-        {errors.firstName?.type === 'minLength' && <p className={errorStyle}>Too short, 3 characters minimum.</p>}
+        {!errors.firstName && <p className="h-6"></p>}
+        <p className={errorStyle} >{errors.firstName?.message}</p>
+        {/* {errors.firstName?.message && <p className={errorStyle}>First name required!</p>} */}
+         {/* {errors.firstName?.type === 'minLength' && <p className={errorStyle}>Too short, 3 characters minimum.</p>} */}
         <label className={labelStyle}>Last Name</label>
         <input
-          {...register("lastName", {required: true})}
+          {...register("lastName", {})}
           className={inputStyle}
         />
+         {!errors.lastName && <p className="h-6"></p>}
+        <p className={errorStyle} >{errors.lastName?.message}</p>
+
+        <label className={labelStyle}>Password</label>
+        <input
+          {...register("password", {})}
+          className={inputStyle}
+        />
+         {!errors.password && <p className="h-6"></p>}
+        <p className={errorStyle} >{errors.password?.message}</p>
+
+        <label className={labelStyle}>Repeat Password</label>
+        <input
+          {...register("repeatPassword", {})}
+          className={inputStyle}
+        />
+         {!errors.repeatPassword && <p className="h-6"></p>}
+        <p className={errorStyle} >{errors.repeatPassword?.message}</p>
+
         <label  className={labelStyle}>Programming Area</label>
         <select
           {...register("area")}
