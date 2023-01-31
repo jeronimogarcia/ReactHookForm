@@ -1,35 +1,10 @@
 import Layout from "@/components/Layout";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { schema, FormData } from '@/utils/yupSchema'
 
-const schema = yup
-  .object({
-    email: yup
-      .string()
-      .required("This field must be filled!")
-      .email("Email format is invalid"),
-    firstName: yup
-      .string()
-      .required("This field must be filled!")
-      .min(3, "Min 3 characters!"),
-    lastName: yup
-      .string()
-      .required("This field must be filled!")
-      .min(3, "Min 3 characters!"),
-    password: yup
-      .string()
-      .required("This field must be filled!")
-      .min(6, "Min 6 characters!"),
-    repeatPassword: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords must match!"),
-    area: yup.string().required(),
-  })
-  .required();
-
-type FormData = yup.InferType<typeof schema>;
+// type FormData = yup.InferType<typeof schema>;
 
 const inputStyle =
   "border border-gray-500 px-1 rounded outline-none bg-gray-200 disabled:opacity-70";
@@ -110,8 +85,9 @@ const RegisterPage = () => {
         disabled={password.length < 6}
         className={inputStyle}
         />
-        {!errors.repeatPassword && <p className="h-6"></p>}
-        <p className={errorStyle}>{errors.repeatPassword?.message}</p>
+        {password.length < 6 || !errors.repeatPassword 
+        ? <p className="h-8"></p> 
+        : <p className={errorStyle}>{errors.repeatPassword?.message}</p>}
 
         <label className={labelStyle}>Programming Area</label>
         <select {...register("area")} className={inputStyle}>
