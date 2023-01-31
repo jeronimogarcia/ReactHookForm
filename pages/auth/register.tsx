@@ -30,63 +30,75 @@ const RegisterPage = () => {
     reset,
     getValues,
     setError,
-    clearErrors
+    clearErrors,
+    watch
   } = useForm<IFormInput>({
-    defaultValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
-      password: "",
-      repeatPassword: "",
-    },
     mode: "all",
+    criteriaMode: "all"
   });
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     console.log(data);
     reset();
   };
 
-  const [checkPass, setCheckPass] = useState(false);
-
+  const [watchPass, watchRepeat] = watch(["password", "repeatPassword"])
+  const [errorState, setErrorState] = useState('false')
+ 
   useEffect(() => {
-    console.log(checkPass)
-    if(checkPass) {
+    if(watchPass === watchRepeat){
+      console.log("effect true")
       clearErrors('repeatPassword')
-    } else {
-      setError('repeatPassword', { type: 'passError', message: 'Password error' });
+      clearErrors('password')
+    }else {
+      console.log("effect false")
+      console.log(errors.repeatPassword?.message)
+      setError('repeatPassword', { type: 'passError', message: '' });
+      setError('password', { type: 'passError', message: '' });
     }
-  }, [checkPass])
+  }, [watchPass, watchRepeat])
   
 
-  const checkPassword = (e: any, type: string) => {
+  // const [checkPass, setCheckPass] = useState(false);
 
-    switch (type) {
-      case "pass":
-        const passwordRepeatValue = getValues("repeatPassword")
-        console.log(e.target.value)
-        if (e.target.value === passwordRepeatValue) {
-          setCheckPass(true);
-          break;
-        } else {
-          setCheckPass(false);
-          break;
-        }
-      case "repeat":
-        const passwordValue = getValues("password");
-        console.log(e.target.value)
-        console.log(passwordValue)
-        if (dirtyFields.password && !errors.password) {
-          if (e.target.value === passwordValue) {
-            setCheckPass(true)
-            break;
-          } else {
-            setCheckPass(false);
-            break;
-          }
-        }
-    }
+  // useEffect(() => {
+  //   console.log(checkPass)
+  //   if(checkPass) {
+  //     clearErrors('repeatPassword')
+  //   } else {
+  //     setError('repeatPassword', { type: 'passError', message: 'Password error' });
+  //   }
+  // }, [checkPass])
+  
 
-  };
+  // const checkPassword = (e: any, type: string) => {
+
+  //   switch (type) {
+  //     case "pass":
+  //       const passwordRepeatValue = getValues("repeatPassword")
+  //       if (e.target.value === passwordRepeatValue) {
+  //         setCheckPass(true);
+  //         break;
+  //       } else {
+  //         setCheckPass(false);
+  //         break;
+  //       }
+  //     case "repeat":
+  //       const passwordValue = getValues("password");
+  //       console.log(e.target.value)
+  //       console.log(passwordValue)
+  //       if (dirtyFields.password && !errors.password?.message) {
+  //         console.log(errors.password)
+  //         if (e.target.value === passwordValue) {
+  //           setCheckPass(true)
+  //           break;
+  //         } else {
+  //           setCheckPass(false);
+  //           break;
+  //         }
+  //       }
+  //   }
+
+  // };
 
   return (
     <Layout
@@ -115,34 +127,42 @@ const RegisterPage = () => {
         <input
           {...register("password", { required: true, minLength: 6 })}
           className={inputStyle}
-          onKeyUp={(e) => checkPassword(e, "pass")}
+          // onKeyUp={(e) => checkPassword(e, "pass")}
         />
 
-        {!errors.password && <p className="h-8"></p>}
+
+        {!errors.password &&  <p className="h-8"></p>}
         {errors.password?.type === "required" && (
           <p className={errorStyle}>Password required!</p>
         )}
         {errors.password?.type === "minLength" && (
           <p className={errorStyle}>Too short, 6 characters minimum.</p>
         )}
+        {errors.password?.type === "passError" && (
+          <p className="h-8">{errors.password?.message} </p>
+        )}
 
         <label className={labelStyle}>Repeat Password</label>
         <input
-          {...register("repeatPassword", { required: true })}
+          {...register("repeatPassword")}
           className={inputStyle}
-          onKeyUp={(e) => checkPassword(e, "repeat")}
+          // onKeyUp={(e) => checkPassword(e, "repeat")}
         />
         <div className="mt-2 h-8">
-        {!checkPass && dirtyFields.password ? <span className={errorStyle}>Password dont match. </span> : <span className="h-8"></span>}
+        {/* {!checkPass && dirtyFields.password ? <span className={errorStyle}>Password dont match. </span> : <span className="h-8"></span>} */}
         {errors.repeatPassword?.type === "required" && (
           <span className={errorStyle}>Confirm password required!</span>
         )}
-        </div>
-        {errors.repeatPassword?.type === "passError" && (
-          <span className={errorStyle}>PASSWORD ERROR</span>
+          {errors.repeatPassword?.type === "passError" && (
+          <span className={errorStyle}>{errors.repeatPassword?.message} Passwords must match!</span>
+        )}
+         {errors.password?.type === "passError" && (
+          <span className={errorStyle}>{errors.password?.message} Passwords must match!</span>
         )}
 
-        
+  
+        </div>
+      
         <label className={labelStyle}>Programming Area</label>
         <select {...register("area")} className={inputStyle}>
           <option value="frontend">Frontend</option>
