@@ -54,7 +54,7 @@ const RegisterPage = () => {
       lastName: '',
       password: '',
       repeatPassword: '',
-      area: 'FullStack'
+      area: 'fullstack'
     }
   });
   const onSubmit: SubmitHandler<FormData> = (data) => {
