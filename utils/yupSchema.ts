@@ -1,6 +1,5 @@
 import * as yup from "yup";
 
-
 declare module 'yup' {
   interface StringSchema {
     numberString(msg?: string): this;
@@ -46,6 +45,4 @@ export const schema = yup
 
 export type FormData = yup.InferType<typeof schema>;
 
-function moment(input: string, format: string, arg2: boolean) {
-  throw new Error("Function not implemented.");
-}
+
