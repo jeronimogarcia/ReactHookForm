@@ -21,6 +21,7 @@ const RegisterPage = () => {
       email: '',
       firstName: '',
       lastName: '',
+      phone: '',
       password: '',
       repeatPassword: '',
       area: 'fullstack'
@@ -44,7 +45,7 @@ const RegisterPage = () => {
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex align-center flex-col w-[800px] p-8 pb-8 rounded bg-gray-900 relative"
+        className="flex align-center flex-col w-[800px] p-8 pb-8 mb-10 rounded bg-gray-900 relative"
       >
         <h1 className="text-2xl text-green-500 mb-4">Register Form</h1>
 
@@ -68,6 +69,14 @@ const RegisterPage = () => {
         />
         {!errors.lastName && <p className="h-6"></p>}
         <p className={errorStyle}>{errors.lastName?.message}</p>
+
+        <label className={labelStyle}>Phone Number</label>
+        <input
+          {...register("phone", { required: true })}
+          className={inputStyle}
+        />
+        {!errors.phone && <p className="h-6"></p>}
+        <p className={errorStyle}>{errors.phone?.message}</p>
 
         <label className={labelStyle}>Password</label>
         <input {...register("password", {})} className={inputStyle} />

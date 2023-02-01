@@ -19,6 +19,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/auth/styles.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/auth/styles.js", "utils/yupSchema.js"],
   "exclude": ["node_modules"]
 }

@@ -1,5 +1,20 @@
 import * as yup from "yup";
 
+
+declare module 'yup' {
+  interface StringSchema {
+    numberString(msg?: string): this;
+  }
+}
+
+yup.addMethod<yup.StringSchema>(
+  yup.string,
+  'numberString',
+  function (msg: string = 'This field must be a number string.') {
+    return this.matches(/^\d+$/, msg);
+  },
+);
+
 export const schema = yup
 .object({
   email: yup
@@ -14,6 +29,10 @@ export const schema = yup
     .string()
     .required("This field must be filled!")
     .min(3, "Min 3 characters!"),
+  phone: yup
+  .string()
+  .required("This field must be filled!")
+  .numberString(),
   password: yup
     .string()
     .required("This field must be filled!")
@@ -26,3 +45,7 @@ export const schema = yup
 .required();
 
 export type FormData = yup.InferType<typeof schema>;
+
+function moment(input: string, format: string, arg2: boolean) {
+  throw new Error("Function not implemented.");
+}
